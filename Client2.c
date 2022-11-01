@@ -8,7 +8,7 @@
 #include <string.h>
 #include "erfunk.h"
 
-#include <threads.h>
+#include <pthread.h>
 
 #define DEFLAUT_IP "217.69.139.74"
 #define BUF_SIZE 4096
@@ -61,7 +61,7 @@ int send_message(void *argv)
 int main(){
 
 	system("clear");
-	thrd_t thread;
+	pthread_t thread;
 	char mess[4096];
 	//int k=0;
 	bzero(mess, sizeof(mess));
@@ -90,77 +90,27 @@ int main(){
 	memset(buf, '\0', sizeof(buf));
 	SSL_read(ssl,buf, sizeof(buf));
 	
-	strcpy(buf, "USER ...@mail.ru\n");  // имя почты введи сюда 
+	strcpy(buf, "USER tolya.mironchenko@bk.ru\n");  // имя почты введи сюда 
 	SSL_write(ssl,buf, strlen(buf));
 	
 	memset(buf, '\0', sizeof(buf));
 	SSL_read(ssl,buf, sizeof(buf));
 	
-	strcpy(buf, "PASS ...\n"); // введи пароль сюда
+	strcpy(buf, "PASS w1mzAJELTgxiSE0Nm7rw\n"); // введи пароль сюда
 	SSL_write(ssl,buf, strlen(buf));
 	
 	memset(buf, '\0', sizeof(buf));
 	SSL_read(ssl,buf, sizeof(buf));
 	printf("%s", buf);
 	
-	thrd_create(&thread, send_message, (void*)ssl);
+	pthread_create(&thread, NULL, (void*)send_message, (void*)ssl);
 	
 	
-	while(1){
-		
-		//if(GetMes)
-		//{
-	//		SSL_read(ssl, mess, sizeof(mess));
-	//	}
+	while(1)
+	{
 		bzero(buf, sizeof(buf));
 		SSL_read(ssl,buf, sizeof(buf));
-		//printf("%s\n",buf);
-		if(GetMes)
-		{
-			int k=0;
-			for(int i=0; i<strlen(buf); i++)
-			{
-				//int k=0;
-				//int j=i;
-				
-				if((buf[i] == 'F') & (buf[i+1] == 'r') & (buf[i+2] == 'o') & (buf[i+3] == 'm'))
-				{
-					//int k=0;
-					int j=i;
-					while(buf[j] != '>')
-					{
-						mess[k] = buf[j];
-						k++;
-						j++;
-					}
-					strcat(mess, ">\n");	
-				}
-				
-				if((buf[i] == 'D') & (buf[i+1] == 'a') & (buf[i+2] == 't') 
-					& (buf[i+3] == 'e'))
-				{	
-					k=k+2;
-					int j = i;
-					while(buf[j] != '\n')
-					{
-						mess[k] = buf[j];
-						k++;
-						j++;
-					}
-					
-				} 	
-			}
-			//getchar();
-			//system("clear");
-			//printf("%s\n",mess);
-			printf("%s\n",mess);
-			GetMes = 0;
-					
-		}
-		/*else
-		{
-			printf("%s\n",buf);
-		}*/
+		printf("%s\n",buf);
 		if(isExit){break;}
 	}
 	

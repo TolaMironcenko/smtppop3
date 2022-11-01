@@ -8,7 +8,7 @@
 #include <string.h>
 #include "base64.h"
 #include "erfunk.h"
-#include <threads.h>
+#include <pthread.h>
 
 #define DEFLAUT_IP "217.69.139.160"
 #define BUF_SIZE 1024
@@ -52,7 +52,7 @@ int send_message(void *argv)
 int main(){
 
 	system("clear");
-	thrd_t thread;
+	pthread_t thread;
 	
 	SSL_CTX *ssl_ctx = SSL_CTX_new(SSLv23_client_method());
 	
@@ -128,7 +128,7 @@ int main(){
 	
 	//system("clear");
 	
-	thrd_create(&thread, send_message, (void*)ssl);
+	pthread_create(&thread, NULL, (void*)send_message, (void*)ssl);
 	
 	
 	while(1){
